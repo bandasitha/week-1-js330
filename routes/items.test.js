@@ -10,6 +10,7 @@ describe("/items", () => {
     itemData.items = [...items];
   });
 
+
   describe("GET /", () => {
     it("should return all items", async () => {
       const res = await request(server).get("/items");
@@ -50,7 +51,6 @@ describe("/items", () => {
       expect(itemData.items.length).toEqual(2);
       expect(itemData.items[0]).toEqual({ id: 'test1', field: 'updated' });
     });
-
     it("should update a different item but not change its id", async () => {
       const item = { field: 'Updated', id: 'new2' };
       const res = await request(server).put("/items/test2").send(item);
@@ -58,7 +58,6 @@ describe("/items", () => {
       expect(itemData.items.length).toEqual(2);
       expect(itemData.items[1]).toEqual({ id: 'test2', field: 'Updated' });
     });
-
     it("should do nothing if id does not exist", async () => {
       const item = { field: 'Updated', id: 'new' };
       const res = await request(server).put("/items/new").send(item);
@@ -81,7 +80,9 @@ describe("/items", () => {
       expect(itemData.items.length).toEqual(1);
       expect(itemData.items).toEqual([items[0]]);
     });
+    it("should return a 404 if given id does not exist", async () => {
+      const res = await request(server).delete("/items/broken");
+      expect(res.statusCode).toEqual(404);
+    });
   });
-
-
 });
