@@ -4,8 +4,9 @@ const router = Router();
 const movieData = require('../dataInterface/movies');
 
 // curl http://localhost:5000/movies
-router.get("/", (req, res, next) => {
-  res.status(200).send(movieData.getAll())
+router.get("/", async (req, res, next) => {
+  let movieList = await movieData.getAll()
+  res.status(200).send(movieList)
 });
 
 // curl http://localhost:5000/movies/7
