@@ -9,9 +9,9 @@ router.get("/", async (req, res, next) => {
   res.status(200).send(movieList)
 });
 
-// curl http://localhost:5000/movies/7
-router.get("/:id", (req, res, next) => {
-  const theMovie = movieData.getById(req.params.id)
+// curl http://localhost:5000/movies/573a1390f29313caabcd5b9a
+router.get("/:id", async (err, req, res, next) => {
+  const theMovie = await movieData.getbyId(req.params.id)
   if(theMovie){
     res.status(200).send(theMovie)
   } else {
@@ -19,10 +19,21 @@ router.get("/:id", (req, res, next) => {
   }
 });
 
+// curl http://localhost:5000/movies/title/Zombie
+router.get("/title/:title", async (req, res, next) => {
+  const theMovie = await movieData.getbyTitle(req.params.title)
+  if(theMovie){
+    res.status(200).send(theMovie)
+  } else {
+    res.status(404).send({ error: `no item found with title ${req.params.title}` });
+  }
+});
+
 // curl -X POST -H "Content-Type: application/json" -d '{"field":"new item value"}' http://localhost:5000/movies
-router.post("/", (req, res, next) => {
+router.post ("/", async (req, res, next) => {
+  let result = await movieData.create(req.body);
   movieData.create(req.body);
-  res.sendStatus(200);
+  res.status(200).send(result);
 });
 
 // curl -X PUT -H "Content-Type: application/json" -d '{"field":"updated value"}' http://localhost:5000/movies/7
